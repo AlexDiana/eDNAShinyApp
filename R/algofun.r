@@ -572,6 +572,129 @@ update_p <- function(beta, gamma, y_sm, w_sm, z, X, indexes_covariates, p_1or0, 
 }
 
 
+createPlots <- function(data_output, beta_data_output, gamma_data_output, indexes_covariates,
+                        usingC, S, niter, nchain, nameVariable, VariableText ){
+  
+  data_output2 <- matrix(NA, nrow = niter * nchain, ncol = S)
+  for (chain in 1:nchain) {
+    data_output2[(chain - 1)*niter + 1:niter,] <- data_output[chain,,]
+  }
+  
+  data_output_long <- reshape2::melt(data_output2)
+  
+  CI_data  <- sapply(1:ncol(data_output2), function(i){
+    c(quantile(data_output2[,i], probs = c(0.025,0.975)),
+      mean(data_output2[,i]))
+  })
+  
+  if(usingC){
+    plot1 <- ggplot2::ggplot() + 
+      ggplot2::geom_errorbar(data = NULL, ggplot2::aes(x = 1:S, ymax=CI_data[2,], 
+                                     ymin=CI_data[1,]),
+                    width=0.2, size=1, color="black") + 
+      ggplot2::geom_point(data = NULL, ggplot2::aes(x = 1:S, 
+                                  y=CI_data[3,]), size=2, shape=21, fill="white") +
+      # theme(panel.background = element_rect(fill = "white")) +
+      ggplot2::theme_bw() + ggplot2::scale_y_continuous(name = nameVariable) +
+      ggplot2::xlab("Sites") 
+  } else {
+    plot1 <- ggplot2::ggplot(data = NULL, ggplot2::aes(x = "Site", y = data_output2[,1])) + ggplot2::geom_boxplot() +
+      ggplot2::theme_bw() + ggplot2::scale_y_continuous(name = nameVariable) +
+      ggplot2::xlab("")
+  }
+  
+  data_plot <- plot1
+  
+  # beta_psi - gamma_psi
+  if(usingC){
+    
+    {
+      beta_data_output2 <- matrix(NA, nrow = niter * nchain, ncol = dim(beta_data_output)[3])
+      for (chain in 1:nchain) {
+        beta_data_output2[(chain - 1)*niter + 1:niter,] <- beta_data_output[chain,,]
+      }
+      gamma_data_output2 <- matrix(NA, nrow = niter * nchain, ncol = dim(gamma_data_output)[3])
+      for (chain in 1:nchain) {
+        gamma_data_output2[(chain - 1)*niter + 1:niter,] <- gamma_data_output[chain,,]
+      }
+      
+      beta_data_output2[,1] <- logit(beta_data_output2[,1])
+      colnames(beta_data_output2) <- dimnames(beta_data_output)[[3]]
+      
+      beta0_data_plot <- ggplot2::ggplot(data = NULL, ggplot2::aes(x = beta_data_output2[,1], y = ..density..)) + 
+        ggplot2::geom_histogram(fill = "cornsilk", color = "black") + ggplot2::ylab("") + 
+        ggplot2::xlab("Probability") + 
+        ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5, 
+                                                          margin = ggplot2::margin(0,0,5,0), size = 14, face = "bold"),
+              panel.background = ggplot2::element_rect(fill = "white"), 
+              panel.border = ggplot2::element_rect(fill = NA, colour = "grey20"),
+              panel.grid.major = ggplot2::element_line(colour = "grey92"), 
+              panel.grid.minor = ggplot2::element_line(colour = "grey92", size = 0.25), 
+              strip.background = ggplot2::element_rect(fill = "grey85", colour = "grey20"), 
+              legend.key = ggplot2::element_rect(fill = "white", colour = NA)) + 
+        ggplot2::ggtitle(VariableText)
+      
+      CICoefficients_data  <- sapply(1:dim(beta_data_output2)[2], function(i){
+        if(i == 1){
+          c(quantile(beta_data_output2[,1], probs = c(0.025,0.975)),
+            mean(beta_data_output2[,1]))
+        } else {
+          # print(beta_data_output2[gamma_data_output2[,indexes_covariates[i]-1]!= 0,i])
+          c(quantile(beta_data_output2[gamma_data_output2[,indexes_covariates[i]-1]!= 0,i], probs = c(0.025,0.975)),
+            mean(beta_data_output2[gamma_data_output2[,indexes_covariates[i]-1]!= 0,i]))
+        }
+      })
+      
+      PIP_data <- data.frame(name = dimnames(gamma_data_output)[[3]],
+                             prob = apply(gamma_data_output2, 2, mean))
+      
+      gamma_data_plot <- ggplot2::ggplot(PIP_data, ggplot2::aes(x=reorder(name, prob), y=prob)) +
+        ggplot2::geom_point(size=3) + # Use a larger dot
+        ggplot2::theme_bw() +
+        ggplot2::ylab("PIP") + ggplot2::xlab("Variable") + 
+        ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5, 
+                                                          margin = ggplot2::margin(0,0,5,0), size = 14, face = "bold"),
+              panel.grid.major.x = ggplot2::element_blank(),
+              panel.grid.minor.x = ggplot2::element_blank(),
+              panel.grid.major.y = ggplot2::element_line(colour="grey60", linetype="dashed"),
+              axis.text.x = ggplot2::element_text(angle = 90)) +
+        ggplot2::ylim(c(0,1)) + ggplot2::geom_hline(ggplot2::aes(yintercept = .5), color = "red")
+      
+      beta_data_plot <- ggplot2::ggplot() +
+        ggplot2::geom_errorbar(data = NULL, ggplot2::aes(x = reorder(factor(colnames(beta_data_output2)[-1], 
+                                                          levels = colnames(beta_data_output2)[-1]), 
+                                                   rep(PIP_data$prob, table(indexes_covariates[-1]))), ymax=CICoefficients_data[1,-1], 
+                                       ymin=CICoefficients_data[2,-1]),
+                      width=0.2, size=1, color="black") +
+        ggplot2::geom_point(data = NULL, ggplot2::aes(x = reorder(factor(colnames(beta_data_output2)[-1], 
+                                                       levels = colnames(beta_data_output2)[-1]), 
+                                                rep(PIP_data$prob, table(indexes_covariates[-1]))), 
+                                    y=CICoefficients_data[3,-1]), size=4, shape=21, fill="white") +
+        ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5, 
+                                                          margin = ggplot2::margin(0,0,5,0), size = 14, face = "bold"),
+              panel.background = ggplot2::element_rect(fill = "white"),
+              panel.border = ggplot2::element_rect(fill = NA, colour = "grey20"),
+              panel.grid.major = ggplot2::element_line(colour = "grey92"),
+              panel.grid.minor = ggplot2::element_line(colour = "grey92", size = 0.25),
+              strip.background = ggplot2::element_rect(fill = "grey85", colour = "grey20"),
+              legend.key = ggplot2::element_rect(fill = "white", colour = NA),
+              axis.text.x = ggplot2::element_text(angle = 90))  +
+        ggplot2::xlab("Variable")+ ggplot2::ylab("Coefficient") #+ coord_flip()
+      
+    }
+    
+  } else {
+    beta0_data_plot <- NULL
+    beta_data_plot <- NULL
+    gamma_data_plot <- NULL
+  }
+  
+  list("data_plot" = data_plot,
+       "beta0_data_plot" = beta0_data_plot,
+       "beta_data_plot" = beta_data_plot,
+       "gamma_data_plot" = gamma_data_plot)
+}
+
 computeGewekeDiagnostics <- function(output){
   
   niter <- length(output)

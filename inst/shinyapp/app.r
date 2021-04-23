@@ -1236,7 +1236,7 @@ server <- function(input, output) {
         }  
       }
       
-      beep()
+      beepr::beep()
       
       rv$results <- list("z_output" = z_output,
                          "psi_output" = psi_output,
@@ -1750,85 +1750,95 @@ server <- function(input, output) {
                                        "download_p10" = download_p10,
                                        "download_beta_p10" = download_beta_p10,
                                        "condProbTable" = condProbTable)
-      # print("ok bello here 3")
+
       # plots diagnostics
       {
         # beta0_psi_GW_diagn <- computeGewekeDiagnostics(beta_psi_output[1,,1])
         
-        beta0_psi_diagnostics_plot <- qplot(1:niter, beta_psi_output[1,,1], geom = "line") + ggtitle("Intercept of psi") +
-          theme_bw() + scale_y_continuous(name = "") +
-          xlab("Iterations") 
+        beta0_psi_diagnostics_plot <- ggplot2::qplot(1:niter, beta_psi_output[1,,1], geom = "line") + 
+          ggplot2::ggtitle("Intercept of psi") +
+          ggplot2::theme_bw() + ggplot2::scale_y_continuous(name = "") +
+          ggplot2::xlab("Iterations") 
         # ggtitle(paste0("Intercept of psi - Geweke Diagnostics = ", round(beta0_psi_GW_diagn,4))) 
-        beta_psi_output_long <- melt(beta_psi_output[1,,-1])
+        beta_psi_output_long <- reshape2::melt(beta_psi_output[1,,-1])
         if(usingCov[1]){
-          beta_psi_diagnostics_plot <- ggplot(beta_psi_output_long, aes(x = Var1, y = value, colour = Var2)) + geom_line() +
-            ggtitle("Coefficients of psi") +
-            theme_bw() + scale_y_continuous(name = "") +
-            xlab("Iterations") 
+          beta_psi_diagnostics_plot <- ggplot2::ggplot(beta_psi_output_long, ggplot2::aes(x = Var1, y = value, colour = Var2)) + 
+            ggplot2::geom_line() +
+            ggplot2::ggtitle("Coefficients of psi") +
+            ggplot2::theme_bw() + ggplot2::scale_y_continuous(name = "") +
+            ggplot2::xlab("Iterations") 
         } else {
           beta_psi_diagnostics_plot <- NULL
         }
         
         # beta0_theta11_GW_diagn <- computeGewekeDiagnostics(beta_theta11_output[1,,1])
         
-        beta0_theta11_diagnostics_plot <- qplot(1:niter, beta_theta11_output[1,,1], geom = "line") + ggtitle("Intercept of theta11") +
-          theme_bw() + scale_y_continuous(name = "") +
-          xlab("Iterations") 
+        beta0_theta11_diagnostics_plot <- ggplot2::qplot(1:niter, beta_theta11_output[1,,1], geom = "line") + 
+          ggplot2::ggtitle("Intercept of theta11") +
+          ggplot2::theme_bw() + ggplot2::scale_y_continuous(name = "") +
+          ggplot2::xlab("Iterations") 
         # ggtitle(paste0("Intercept of theta11 - Geweke Diagnostics = ", round(beta0_theta11_GW_diagn,4)))
-        beta_theta11_output_long <- melt(beta_theta11_output[1,,-1])
+        beta_theta11_output_long <- reshape2::melt(beta_theta11_output[1,,-1])
         if(usingCov[2]){
-          beta_theta11_diagnostics_plot <- ggplot(beta_theta11_output_long, aes(x = Var1, y = value, colour = Var2)) + geom_line() +
-            ggtitle("Coefficients of theta11")   +
-            theme_bw() + scale_y_continuous(name = "") +
-            xlab("Iterations") 
+          beta_theta11_diagnostics_plot <- ggplot2::ggplot(beta_theta11_output_long, ggplot2::aes(x = Var1, y = value, colour = Var2)) + 
+            ggplot2::geom_line() +
+            ggplot2::ggtitle("Coefficients of theta11")   +
+            ggplot2::theme_bw() + ggplot2::scale_y_continuous(name = "") +
+            ggplot2::xlab("Iterations") 
         } else {
           beta_theta11_diagnostics_plot <- NULL
         }
         
         # beta0_theta10_GW_diagn <- computeGewekeDiagnostics(beta_theta10_output[1,,1])
         
-        beta0_theta10_diagnostics_plot <- qplot(1:niter, beta_theta10_output[1,,1], geom = "line") + ggtitle("Intercept of theta10") +
-          theme_bw() + scale_y_continuous(name = "") +
-          xlab("Iterations")  
+        beta0_theta10_diagnostics_plot <- ggplot2::qplot(1:niter, beta_theta10_output[1,,1], geom = "line") + 
+          ggplot2::ggtitle("Intercept of theta10") +
+          ggplot2::theme_bw() + ggplot2::scale_y_continuous(name = "") +
+          ggplot2::xlab("Iterations")  
         # ggtitle(paste0("Intercept of theta10 - Geweke Diagnostics = ", round(beta0_theta10_GW_diagn,4)))
-        beta_theta10_output_long <- melt(beta_theta10_output[1,,-1])
+        beta_theta10_output_long <- reshape2::melt(beta_theta10_output[1,,-1])
         if(usingCov[3]){
-          beta_theta10_diagnostics_plot <- ggplot(beta_theta10_output_long, aes(x = Var1, y = value, colour = Var2)) + geom_line() +
-            ggtitle("Coefficients of theta10")   +
-            theme_bw() + scale_y_continuous(name = "") +
-            xlab("Iterations") 
+          beta_theta10_diagnostics_plot <- ggplot2::ggplot(beta_theta10_output_long, ggplot2::aes(x = Var1, y = value, colour = Var2)) + 
+            ggplot2::geom_line() +
+            ggplot2::ggtitle("Coefficients of theta10")   +
+            ggplot2::theme_bw() + ggplot2::scale_y_continuous(name = "") +
+            ggplot2::xlab("Iterations") 
         } else {
           beta_theta10_diagnostics_plot <- NULL
         }
         
         # beta0_p11_GW_diagn <- computeGewekeDiagnostics(beta_p11_output[1,,1])
         
-        beta0_p11_diagnostics_plot <- qplot(1:niter, beta_p11_output[1,,1], geom = "line") + ggtitle("Intercept of p11") +
-          theme_bw() + scale_y_continuous(name = "") +
-          xlab("Iterations") 
+        beta0_p11_diagnostics_plot <- ggplot2::qplot(1:niter, beta_p11_output[1,,1], geom = "line") + 
+          ggplot2::ggtitle("Intercept of p11") +
+          ggplot2::theme_bw() + ggplot2::scale_y_continuous(name = "") +
+          ggplot2::xlab("Iterations") 
         # ggtitle(paste0("Intercept of p11 - Geweke Diagnostics = ", round(beta0_p11_GW_diagn,4)))
-        beta_p11_output_long <- melt(beta_p11_output[1,,-1])
+        beta_p11_output_long <- reshape2::melt(beta_p11_output[1,,-1])
         if(usingCov[4]){
-          beta_p11_diagnostics_plot <- ggplot(beta_p11_output_long, aes(x = Var1, y = value, colour = Var2)) + geom_line() +
-            ggtitle("Coefficients of p11")  +
-            theme_bw() + scale_y_continuous(name = "") +
-            xlab("Iterations")  
+          beta_p11_diagnostics_plot <- ggplot2::ggplot(beta_p11_output_long, ggplot2::aes(x = Var1, y = value, colour = Var2)) + 
+            ggplot2::geom_line() +
+            ggplot2::ggtitle("Coefficients of p11")  +
+            ggplot2::theme_bw() + ggplot2::scale_y_continuous(name = "") +
+            ggplot2::xlab("Iterations")  
         } else  {
           beta_p11_diagnostics_plot <- NULL
         }
         
         # beta0_p10_GW_diagn <- computeGewekeDiagnostics(beta_p10_output[1,,1])
         
-        beta0_p10_diagnostics_plot <- qplot(1:niter, beta_p10_output[1,,1], geom = "line") + ggtitle("Intercept of p10") +
-          theme_bw() + scale_y_continuous(name = "") +
-          xlab("Iterations") 
+        beta0_p10_diagnostics_plot <- ggplot2::qplot(1:niter, beta_p10_output[1,,1], geom = "line") + 
+          ggplot2::ggtitle("Intercept of p10") +
+          ggplot2::theme_bw() + ggplot2::scale_y_continuous(name = "") +
+          ggplot2::xlab("Iterations") 
         # ggtitle(paste0("Intercept of p10 - Geweke Diagnostics = ", round(beta0_p10_GW_diagn,4)))
-        beta_p10_output_long <- melt(beta_p10_output[1,,-1])
+        beta_p10_output_long <- reshape2::melt(beta_p10_output[1,,-1])
         if(usingCov[5]){
-          beta_p10_diagnostics_plot <- ggplot(beta_p10_output_long, aes(x = Var1, y = value, colour = Var2)) + geom_line() +
-            ggtitle("Coefficients of p10")   +
-            theme_bw() + scale_y_continuous(name = "") +
-            xlab("Iterations") 
+          beta_p10_diagnostics_plot <- ggplot2::ggplot(beta_p10_output_long, ggplot2::aes(x = Var1, y = value, colour = Var2)) + 
+            ggplot2::geom_line() +
+            ggplot2::ggtitle("Coefficients of p10")   +
+            ggplot2::theme_bw() + ggplot2::scale_y_continuous(name = "") +
+            ggplot2::xlab("Iterations") 
         } else {
           beta_p10_diagnostics_plot <- NULL
         }
@@ -1840,17 +1850,17 @@ server <- function(input, output) {
         
         # psi
         {
-          ESS_beta0psi <- effectiveSize(beta_psi_output[1,,1])
+          ESS_beta0psi <- coda::effectiveSize(beta_psi_output[1,,1])
           if(usingCov[1]){
-            ESS_betapsi <- effectiveSize(beta_psi_output[1,,-1])
+            ESS_betapsi <- coda::effectiveSize(beta_psi_output[1,,-1])
             diagnostics_table_psi <- data.frame("Variable" = c("Intercept",names(ESS_betapsi)),
                                                 "ESS" = c(ESS_beta0psi, ESS_betapsi),
-                                                "Recommended ESS" = 500)
+                                                "Recommended ESS" = 250)
             
           } else {
             diagnostics_table_psi <- data.frame("Variable" = c("Intercept"),
                                                 "ESS" = c(ESS_beta0psi),
-                                                "Recommended ESS" = 500)
+                                                "Recommended ESS" = 250)
           } 
           
           
@@ -1859,17 +1869,17 @@ server <- function(input, output) {
         
         # theta11
         {
-          ESS_beta0theta11 <- effectiveSize(beta_theta11_output[1,,1])
+          ESS_beta0theta11 <- coda::effectiveSize(beta_theta11_output[1,,1])
           if(usingCov[2]){
-            ESS_betatheta11 <- effectiveSize(beta_theta11_output[1,,-1])
+            ESS_betatheta11 <- coda::effectiveSize(beta_theta11_output[1,,-1])
             
             diagnostics_table_theta11 <- data.frame("Variable" = c("Intercept",names(ESS_betatheta11)),
                                                     "ESS" = c(ESS_beta0theta11, ESS_betatheta11),
-                                                    "Recommended ESS" = 500)
+                                                    "Recommended ESS" = 250)
           } else {
             diagnostics_table_theta11 <- data.frame("Variable" = c("Intercept"),
                                                     "ESS" = c(ESS_beta0theta11),
-                                                    "Recommended ESS" = 500)
+                                                    "Recommended ESS" = 250)
           }
           
           rownames(diagnostics_table_theta11) <- NULL
@@ -1877,18 +1887,18 @@ server <- function(input, output) {
         
         # theta10
         {
-          ESS_beta0theta10 <- effectiveSize(beta_theta10_output[1,,1])
+          ESS_beta0theta10 <- coda::effectiveSize(beta_theta10_output[1,,1])
           if(usingCov[3]){
-            ESS_betatheta10 <- effectiveSize(beta_theta10_output[1,,-1])
+            ESS_betatheta10 <- coda::effectiveSize(beta_theta10_output[1,,-1])
             
             diagnostics_table_theta10 <- data.frame("Variable" = c("Intercept",names(ESS_betatheta10)),
                                                     "ESS" = c(ESS_beta0theta10, ESS_betatheta10),
-                                                    "Recommended ESS" = 500)
+                                                    "Recommended ESS" = 250)
             
           } else {
             diagnostics_table_theta10 <- data.frame("Variable" = c("Intercept"),
                                                     "ESS" = c(ESS_beta0theta10),
-                                                    "Recommended ESS" = 500)
+                                                    "Recommended ESS" = 250)
             
           }
           
@@ -1897,17 +1907,17 @@ server <- function(input, output) {
         
         # p11
         {
-          ESS_beta0p11 <- effectiveSize(beta_p11_output[1,,1])
+          ESS_beta0p11 <- coda::effectiveSize(beta_p11_output[1,,1])
           if(usingCov[4]){
-            ESS_betap11 <- effectiveSize(beta_p11_output[1,,-1])
+            ESS_betap11 <- coda::effectiveSize(beta_p11_output[1,,-1])
             
             diagnostics_table_p11 <- data.frame("Variable" = c("Intercept",names(ESS_betap11)),
                                                 "ESS" = c(ESS_beta0p11, ESS_betap11),
-                                                "Recommended ESS" = 500)  
+                                                "Recommended ESS" = 250)  
           } else {
             diagnostics_table_p11 <- data.frame("Variable" = c("Intercept"),
                                                 "ESS" = c(ESS_beta0p11),
-                                                "Recommended ESS" = 500)  
+                                                "Recommended ESS" = 250)  
           }
           
           
@@ -1916,31 +1926,31 @@ server <- function(input, output) {
         
         # p10
         {
-          ESS_beta0p10 <- effectiveSize(beta_p10_output[1,,1])
+          ESS_beta0p10 <- coda::effectiveSize(beta_p10_output[1,,1])
           if(usingCov[5]){
-            ESS_betap10 <- effectiveSize(beta_p10_output[1,,-1])
+            ESS_betap10 <- coda::effectiveSize(beta_p10_output[1,,-1])
             
             diagnostics_table_p10 <- data.frame("Variable" = c("Intercept",names(ESS_betap10)),
                                                 "ESS" = c(ESS_beta0p10, ESS_betap10),
-                                                "Recommended ESS" = 500)
+                                                "Recommended ESS" = 250)
             
           } else {
             diagnostics_table_p10 <- data.frame("Variable" = c("Intercept"),
                                                 "ESS" = c(ESS_beta0p10),
-                                                "Recommended ESS" = 500)
+                                                "Recommended ESS" = 250)
           }
           
           rownames(diagnostics_table_p10) <- NULL
         }
         
-        convergenceReached <- (ESS_beta0psi > 500) & (ESS_beta0theta11 > 500) & (ESS_beta0theta10 > 500) & 
-          (ESS_beta0p11 > 500) & (ESS_beta0p10 > 500) 
+        convergenceReached <- (ESS_beta0psi > 250) & (ESS_beta0theta11 > 250) & (ESS_beta0theta10 > 250) & 
+          (ESS_beta0p11 > 250) & (ESS_beta0p10 > 250) 
       }
       
       if(convergenceReached){
-        shinyalert("Fitting complete", "", type = "success")  
+        shinyalert::shinyalert("Fitting complete", "", type = "success")  
       } else {
-        shinyalert("Convergence not reached", "We suggest running again the model with more iterations", type = "warning")
+        shinyalert::shinyalert("Convergence not reached", "We suggest running again the model with more iterations", type = "warning")
       }
       
       
@@ -1963,125 +1973,6 @@ server <- function(input, output) {
       # runjs("$('#download_all')[0].click();")
       
     })
-    
-    createPlots <- function(data_output, beta_data_output, gamma_data_output, indexes_covariates,
-                            usingC, S, niter, nchain, nameVariable, VariableText ){
-      
-      data_output2 <- matrix(NA, nrow = niter * nchain, ncol = S)
-      for (chain in 1:nchain) {
-        data_output2[(chain - 1)*niter + 1:niter,] <- data_output[chain,,]
-      }
-      
-      data_output_long <- melt(data_output2)
-      
-      CI_data  <- sapply(1:ncol(data_output2), function(i){
-        c(quantile(data_output2[,i], probs = c(0.025,0.975)),
-          mean(data_output2[,i]))
-      })
-      
-      if(usingC){
-        plot1 <- ggplot() + 
-          geom_errorbar(data = NULL, aes(x = 1:S, ymax=CI_data[2,], 
-                                         ymin=CI_data[1,]),
-                        width=0.2, size=1, color="black") + 
-          geom_point(data = NULL, aes(x = 1:S, 
-                                      y=CI_data[3,]), size=2, shape=21, fill="white") +
-          # theme(panel.background = element_rect(fill = "white")) +
-          theme_bw() + scale_y_continuous(name = nameVariable) +
-          xlab("Sites") 
-      } else {
-        plot1 <- ggplot(data = NULL, aes(x = "Site", y = data_output2[,1])) + geom_boxplot() +
-          theme_bw() + scale_y_continuous(name = nameVariable) +
-          xlab("")
-      }
-      
-      data_plot <- plot1
-      
-      # beta_psi - gamma_psi
-      if(usingC){
-        
-        {
-          beta_data_output2 <- matrix(NA, nrow = niter * nchain, ncol = dim(beta_data_output)[3])
-          for (chain in 1:nchain) {
-            beta_data_output2[(chain - 1)*niter + 1:niter,] <- beta_data_output[chain,,]
-          }
-          gamma_data_output2 <- matrix(NA, nrow = niter * nchain, ncol = dim(gamma_data_output)[3])
-          for (chain in 1:nchain) {
-            gamma_data_output2[(chain - 1)*niter + 1:niter,] <- gamma_data_output[chain,,]
-          }
-          
-          beta_data_output2[,1] <- logit(beta_data_output2[,1])
-          colnames(beta_data_output2) <- dimnames(beta_data_output)[[3]]
-          
-          beta0_data_plot <- ggplot(data = NULL, aes(x = beta_data_output2[,1], y = ..density..)) + 
-            geom_histogram(fill = "cornsilk", color = "black") + ylab("") + xlab("Probability") + 
-            theme(plot.title = element_text(hjust = 0.5, margin=margin(0,0,5,0), size = 14, face = "bold"),
-                  panel.background = element_rect(fill = "white"), 
-                  panel.border = element_rect(fill = NA, colour = "grey20"),
-                  panel.grid.major = element_line(colour = "grey92"), 
-                  panel.grid.minor = element_line(colour = "grey92", size = 0.25), 
-                  strip.background = element_rect(fill = "grey85", colour = "grey20"), 
-                  legend.key = element_rect(fill = "white", colour = NA)) + 
-            ggtitle(VariableText)
-          
-          CICoefficients_data  <- sapply(1:dim(beta_data_output2)[2], function(i){
-            if(i == 1){
-              c(quantile(beta_data_output2[,1], probs = c(0.025,0.975)),
-                mean(beta_data_output2[,1]))
-            } else {
-              # print(beta_data_output2[gamma_data_output2[,indexes_covariates[i]-1]!= 0,i])
-              c(quantile(beta_data_output2[gamma_data_output2[,indexes_covariates[i]-1]!= 0,i], probs = c(0.025,0.975)),
-                mean(beta_data_output2[gamma_data_output2[,indexes_covariates[i]-1]!= 0,i]))
-            }
-          })
-          
-          PIP_data <- data.frame(name = dimnames(gamma_data_output)[[3]],
-                                 prob = apply(gamma_data_output2, 2, mean))
-          
-          gamma_data_plot <- ggplot(PIP_data, aes(x=reorder(name, prob), y=prob)) +
-            geom_point(size=3) + # Use a larger dot
-            theme_bw() +
-            ylab("PIP") + xlab("Variable") + 
-            theme(plot.title = element_text(hjust = 0.5, margin=margin(0,0,5,0), size = 14, face = "bold"),
-                  panel.grid.major.x = element_blank(),
-                  panel.grid.minor.x = element_blank(),
-                  panel.grid.major.y = element_line(colour="grey60", linetype="dashed"),
-                  axis.text.x = element_text(angle = 90)) +
-            ylim(c(0,1)) + geom_hline(aes(yintercept = .5), color = "red")
-          
-          beta_data_plot <- ggplot() +
-            geom_errorbar(data = NULL, aes(x = reorder(factor(colnames(beta_data_output2)[-1], 
-                                                              levels = colnames(beta_data_output2)[-1]), 
-                                                       rep(PIP_data$prob, table(indexes_covariates[-1]))), ymax=CICoefficients_data[1,-1], 
-                                           ymin=CICoefficients_data[2,-1]),
-                          width=0.2, size=1, color="black") +
-            geom_point(data = NULL, aes(x = reorder(factor(colnames(beta_data_output2)[-1], 
-                                                           levels = colnames(beta_data_output2)[-1]), 
-                                                    rep(PIP_data$prob, table(indexes_covariates[-1]))), 
-                                        y=CICoefficients_data[3,-1]), size=4, shape=21, fill="white") +
-            theme(plot.title = element_text(hjust = 0.5, margin=margin(0,0,5,0), size = 14, face = "bold"),
-                  panel.background = element_rect(fill = "white"),
-                  panel.border = element_rect(fill = NA, colour = "grey20"),
-                  panel.grid.major = element_line(colour = "grey92"),
-                  panel.grid.minor = element_line(colour = "grey92", size = 0.25),
-                  strip.background = element_rect(fill = "grey85", colour = "grey20"),
-                  legend.key = element_rect(fill = "white", colour = NA),
-                  axis.text.x = element_text(angle = 90))  +
-            xlab("Variable")+ ylab("Coefficient") #+ coord_flip()
-          
-        }
-        
-      } else {
-        beta0_data_plot <- NULL
-        beta_data_plot <- NULL
-        gamma_data_plot <- NULL
-      }
-      
-      list("data_plot" = data_plot,
-           "beta0_data_plot" = beta0_data_plot,
-           "beta_data_plot" = beta_data_plot,
-           "gamma_data_plot" = gamma_data_plot)
-    }
     
     # plots for psi 
     {

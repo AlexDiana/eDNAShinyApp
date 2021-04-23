@@ -1,13 +1,11 @@
 Package: eDNAShinyApp
 Type: Package
-Title: Shiny App for fitting 
+Title: Shiny App for fitting Bayesian variable selection models for eDNA
 Version: 1.0
 Date: 2021-04-23
-Author: Alex Diana, Eleni Matechou
+Author: Alex Diana
 Maintainer: Alex Diana <a.diana@kent.ac.uk>
-Description: More details about what the package does. See
-           <http://cran.r-project.org/doc/manuals/r-release/R-exts.html#The-DESCRIPTION-file> for
-           details on how to write this part.
+Description: This app implements the methods developed by Griffin, J. E., Matechou, E. Buxton, A. S., Bormpoudakis, D. and Griffiths, R. A., in Modelling environmental DNA data; Bayesian variable selection accounting for false positive and false negative errors, Journal of the Royal Statistical Society: Series C (Applied Statistics).
 License: GPL (>= 2)
 Encoding: UTF-8
 RoxygenNote: 7.1.1
