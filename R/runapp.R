@@ -1,4 +1,10 @@
+#' Shiny App
+#' 
+#' @description This function runs the Shiny App.
+#' 
 #' @export
+#' 
+#' 
 runeDNAShinyApp <- function() {
   appDir <- system.file("shinyapp", package = "eDNAShinyApp")
   if (appDir == "") {
