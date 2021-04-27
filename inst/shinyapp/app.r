@@ -1025,6 +1025,8 @@ server <- function(input, output) {
         qx <- array(NA, dim = c(nchain , niter, K + 1))
       }
       
+      shinyalert("MCMC started successfully", "Keep track of the progresses in the box in the bottom-right corner", type = "success")
+      
       withProgress(message = 'Running', value = 0, min = 0, max = 1, {
         
         for (chain in 1:nchain) {
@@ -1255,7 +1257,7 @@ server <- function(input, output) {
                          "gamma_p11_output" = gamma_p11_output,
                          "gamma_p10_output" = gamma_p10_output,
                          "indexes_covariates" = indexes_covariates)
-      # print("ok bello here")
+      
       # create plots
       {
         
@@ -1299,7 +1301,7 @@ server <- function(input, output) {
         gamma_p10_plot <- list_p10_plot$gamma_data_plot
         
       }
-      # print("ok bello here 2")
+      
       rv_eDNA_plots$results <- list("psi_plot" = psi_plot,
                                     "beta0_psi_plot" = beta0_psi_plot,
                                     "beta_psi_plot" = beta_psi_plot,
@@ -1320,7 +1322,7 @@ server <- function(input, output) {
                                     "beta0_p10_plot" = beta0_p10_plot,
                                     "beta_p10_plot" = beta_p10_plot,
                                     "gamma_p10_plot" = gamma_p10_plot)
-      # print("ok bello here 2")
+      
       # create results
       {
         
@@ -3245,102 +3247,102 @@ server <- function(input, output) {
       output$DAG <- renderImage({
         
         if(!input$cov_using1 & !input$cov_using2 & !input$cov_using3 & !input$cov_using4 & !input$cov_using5){
-          filename <- normalizePath(system.file('./www',
+          filename <- normalizePath(system.file('extdata','www',
                                                 "img.jpg", package = "eDNAShinyApp"))  
           # filename <- normalizePath(file.path('./www',
           #                                     "img.jpg"))  
         } else if (input$cov_using1 & !input$cov_using2 & !input$cov_using3 & !input$cov_using4 & !input$cov_using5){
-          filename <- normalizePath(system.file('./www',
+          filename <- normalizePath(system.file('extdata','www',
                                                 "img1.jpg", package = "eDNAShinyApp"))  
         } else if (input$cov_using1 & input$cov_using2 & !input$cov_using3 & !input$cov_using4 & !input$cov_using5){
           filename <- normalizePath(system.file('./www',
                                                 "img12.jpg", package = "eDNAShinyApp"))  
         } else if (input$cov_using1 & !input$cov_using2 & input$cov_using3 & !input$cov_using4 & !input$cov_using5){
-          filename <- normalizePath(system.file('./www',
+          filename <- normalizePath(system.file('extdata','www',
                                                 "img13.jpg", package = "eDNAShinyApp"))   
         } else if (input$cov_using1 & !input$cov_using2 & !input$cov_using3 & input$cov_using4 & !input$cov_using5){
           filename <- normalizePath(system.file('./www',
                                                 "img14.jpg", package = "eDNAShinyApp"))  
         } else if (input$cov_using1 & !input$cov_using2 & !input$cov_using3 & !input$cov_using4 & input$cov_using5){
-          filename <- normalizePath(system.file('./www',
+          filename <- normalizePath(system.file('extdata','www',
                                                 "img15.jpg", package = "eDNAShinyApp"))  
         } else if (input$cov_using1 & input$cov_using2 & input$cov_using3 & !input$cov_using4 & !input$cov_using5){
           filename <- normalizePath(system.file('./www',
                                                 "img123.jpg", package = "eDNAShinyApp"))  
         } else if (input$cov_using1 & input$cov_using2 & !input$cov_using3 & input$cov_using4 & !input$cov_using5){
-          filename <- normalizePath(system.file('./www',
+          filename <- normalizePath(system.file('extdata','www',
                                                 "img124.jpg", package = "eDNAShinyApp"))  
         } else if (input$cov_using1 & input$cov_using2 & !input$cov_using3 & !input$cov_using4 & input$cov_using5){
           filename <- normalizePath(system.file('./www',
                                                 "img125.jpg", package = "eDNAShinyApp"))  
         } else if (input$cov_using1 & !input$cov_using2 & input$cov_using3 & input$cov_using4 & !input$cov_using5){
-          filename <- normalizePath(system.file('./www',
+          filename <- normalizePath(system.file('extdata','www',
                                                 "img134.jpg", package = "eDNAShinyApp"))  
         } else if (input$cov_using1 & !input$cov_using2 & input$cov_using3 & !input$cov_using4 & input$cov_using5){
           filename <- normalizePath(system.file('./www',
                                                 "img135.jpg", package = "eDNAShinyApp"))  
         } else if (input$cov_using1 & !input$cov_using2 & !input$cov_using3 & input$cov_using4 & input$cov_using5){
-          filename <- normalizePath(system.file('./www',
+          filename <- normalizePath(system.file('extdata','www',
                                                 "img145.jpg", package = "eDNAShinyApp"))  
         } else if (input$cov_using1 & input$cov_using2 & input$cov_using3 & input$cov_using4 & !input$cov_using5){
           filename <- normalizePath(system.file('./www',
                                                 "img1234.jpg", package = "eDNAShinyApp"))  
         } else if (input$cov_using1 & input$cov_using2 & input$cov_using3 & !input$cov_using4 & input$cov_using5){
-          filename <- normalizePath(system.file('./www',
+          filename <- normalizePath(system.file('extdata','www',
                                                 "img1235.jpg", package = "eDNAShinyApp"))  
         } else if (input$cov_using1 & input$cov_using2 & !input$cov_using3 & input$cov_using4 & input$cov_using5){
           filename <- normalizePath(system.file('./www',
                                                 "img1245.jpg", package = "eDNAShinyApp"))  
         } else if (input$cov_using1 & !input$cov_using2 & input$cov_using3 & input$cov_using4 & input$cov_using5){
-          filename <- normalizePath(system.file('./www',
+          filename <- normalizePath(system.file('extdata','www',
                                                 "img1345.jpg", package = "eDNAShinyApp"))  
         } else if (!input$cov_using1 & input$cov_using2 & !input$cov_using3 & !input$cov_using4 & !input$cov_using5){
           filename <- normalizePath(system.file('./www',
                                                 "img2.jpg", package = "eDNAShinyApp"))  
         } else if (!input$cov_using1 & !input$cov_using2 & input$cov_using3 & !input$cov_using4 & !input$cov_using5){
-          filename <- normalizePath(system.file('./www',
+          filename <- normalizePath(system.file('extdata','www',
                                                 "img3.jpg", package = "eDNAShinyApp"))   
         } else if (!input$cov_using1 & !input$cov_using2 & !input$cov_using3 & input$cov_using4 & !input$cov_using5){
           filename <- normalizePath(system.file('./www',
                                                 "img4.jpg", package = "eDNAShinyApp"))  
         } else if (!input$cov_using1 & !input$cov_using2 & !input$cov_using3 & !input$cov_using4 & input$cov_using5){
-          filename <- normalizePath(system.file('./www',
+          filename <- normalizePath(system.file('extdata','www',
                                                 "img5.jpg", package = "eDNAShinyApp"))  
         } else if (!input$cov_using1 & input$cov_using2 & input$cov_using3 & !input$cov_using4 & !input$cov_using5){
           filename <- normalizePath(system.file('./www',
                                                 "img23.jpg", package = "eDNAShinyApp"))  
         } else if (!input$cov_using1 & input$cov_using2 & !input$cov_using3 & input$cov_using4 & !input$cov_using5){
-          filename <- normalizePath(system.file('./www',
+          filename <- normalizePath(system.file('extdata','www',
                                                 "img24.jpg", package = "eDNAShinyApp"))  
         } else if (!input$cov_using1 & input$cov_using2 & !input$cov_using3 & !input$cov_using4 & input$cov_using5){
           filename <- normalizePath(system.file('./www',
                                                 "img25.jpg", package = "eDNAShinyApp"))  
         } else if (!input$cov_using1 & !input$cov_using2 & input$cov_using3 & input$cov_using4 & !input$cov_using5){
-          filename <- normalizePath(system.file('./www',
+          filename <- normalizePath(system.file('extdata','www',
                                                 "img34.jpg", package = "eDNAShinyApp"))  
         } else if (!input$cov_using1 & !input$cov_using2 & input$cov_using3 & !input$cov_using4 & input$cov_using5){
           filename <- normalizePath(system.file('./www',
                                                 "img35.jpg", package = "eDNAShinyApp"))   
         } else if (!input$cov_using1 & !input$cov_using2 & !input$cov_using3 & input$cov_using4 & input$cov_using5){
-          filename <- normalizePath(system.file('./www',
+          filename <- normalizePath(system.file('extdata','www',
                                                 "img45.jpg", package = "eDNAShinyApp"))  
         } else if (!input$cov_using1 & input$cov_using2 & input$cov_using3 & input$cov_using4 & !input$cov_using5){
           filename <- normalizePath(system.file('./www',
                                                 "img234.jpg", package = "eDNAShinyApp"))  
         } else if (!input$cov_using1 & input$cov_using2 & input$cov_using3 & !input$cov_using4 & input$cov_using5){
-          filename <- normalizePath(system.file('./www',
+          filename <- normalizePath(system.file('extdata','www',
                                                 "img235.jpg", package = "eDNAShinyApp"))  
         } else if (!input$cov_using1 & input$cov_using2 & !input$cov_using3 & input$cov_using4 & input$cov_using5){
           filename <- normalizePath(system.file('./www',
                                                 "img245.jpg", package = "eDNAShinyApp"))  
         } else if (!input$cov_using1 & !input$cov_using2 & input$cov_using3 & input$cov_using4 & input$cov_using5){
-          filename <- normalizePath(system.file('./www',
+          filename <- normalizePath(system.file('extdata','www',
                                                 "img345.jpg", package = "eDNAShinyApp"))  
         } else if (!input$cov_using1 & input$cov_using2 & input$cov_using3 & input$cov_using4 & input$cov_using5){
           filename <- normalizePath(system.file('./www',
                                                 "img2345.jpg", package = "eDNAShinyApp"))  
         } else if (input$cov_using1 & input$cov_using2 & input$cov_using3 & input$cov_using4 & input$cov_using5){
-          filename <- normalizePath(system.file('./www',
+          filename <- normalizePath(system.file('extdata','www',
                                                 "img12345.jpg", package = "eDNAShinyApp"))  
         }
         
