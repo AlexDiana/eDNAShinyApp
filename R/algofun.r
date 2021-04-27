@@ -606,6 +606,8 @@ createPlots <- function(data_output, beta_data_output, gamma_data_output, indexe
                      strip.background = ggplot2::element_rect(fill = "grey85", colour = "grey20"), 
                      axis.text.x = ggplot2::element_text(size = 14),
                      axis.text.y = ggplot2::element_text(size = 14),
+                     axis.title.x = ggplot2::element_text(size = 14),
+                     axis.title.y = ggplot2::element_text(size = 14),
                      legend.key = ggplot2::element_rect(fill = "white", colour = NA))
   } else {
     plot1 <- ggplot2::ggplot(data = NULL, ggplot2::aes(x = "Site", y = data_output2[,1])) + ggplot2::geom_boxplot() +
@@ -620,6 +622,8 @@ createPlots <- function(data_output, beta_data_output, gamma_data_output, indexe
                      strip.background = ggplot2::element_rect(fill = "grey85", colour = "grey20"), 
                      axis.text.x = ggplot2::element_text(size = 14),
                      axis.text.y = ggplot2::element_text(size = 14),
+                     axis.title.x = ggplot2::element_text(size = 14),
+                     axis.title.y = ggplot2::element_text(size = 14),
                      legend.key = ggplot2::element_rect(fill = "white", colour = NA))
   }
   
@@ -653,6 +657,8 @@ createPlots <- function(data_output, beta_data_output, gamma_data_output, indexe
               strip.background = ggplot2::element_rect(fill = "grey85", colour = "grey20"), 
               axis.text.x = ggplot2::element_text(size = 14),
               axis.text.y = ggplot2::element_text(size = 14),
+              axis.title.x = ggplot2::element_text(size = 14),
+              axis.title.y = ggplot2::element_text(size = 14),
               legend.key = ggplot2::element_rect(fill = "white", colour = NA)) + 
         ggplot2::ggtitle(VariableText)
       
@@ -680,6 +686,8 @@ createPlots <- function(data_output, beta_data_output, gamma_data_output, indexe
               panel.grid.minor.x = ggplot2::element_blank(),
               panel.grid.major.y = ggplot2::element_line(colour="grey60", linetype="dashed"),
               axis.text.x = ggplot2::element_text(angle = 90, size = 14),
+              axis.title.x = ggplot2::element_text(size = 14),
+              axis.title.y = ggplot2::element_text(size = 14),
               axis.text.y = ggplot2::element_text(size = 14))  +
         ggplot2::ylim(c(0,1)) + ggplot2::geom_hline(ggplot2::aes(yintercept = .5), color = "red")
       
@@ -702,6 +710,8 @@ createPlots <- function(data_output, beta_data_output, gamma_data_output, indexe
               strip.background = ggplot2::element_rect(fill = "grey85", colour = "grey20"),
               legend.key = ggplot2::element_rect(fill = "white", colour = NA),
               axis.text.x = ggplot2::element_text(angle = 90, size = 14),
+              axis.title.x = ggplot2::element_text(size = 14),
+              axis.title.y = ggplot2::element_text(size = 14),
               axis.text.y = ggplot2::element_text(size = 14))  +
         ggplot2::xlab("Variable")+ ggplot2::ylab("Coefficient") #+ coord_flip()
       

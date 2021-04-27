@@ -31,7 +31,7 @@ ui <- fluidPage(theme = shinythemes::shinytheme("flatly"),
                                                  
                                                  p("The model is fitted using a", strong("Bayesian approach"), "and",  strong("all model parameters,"), "that is the probability of species presence and the probabilities of error in both stages,", strong("can be modelled as functions of covariates"), "with the important covariates for each probability identified using", strong("Bayesian variable selection.")),
                                                  
-                                                 p("The following notation is introduced in the Griffin et al. (2019) paper and used throughout this app. All parameters are modelled as site-specific but we ommit the subscripts here for ease of notation."),
+                                                 p("The following notation is introduced in the Griffin et al. (2020) paper and used throughout this app. All parameters are modelled as site-specific but we omit the subscripts here for ease of notation."),
                                                  
                                                  p(HTML(paste("&#968;",": Probability of species presence",sep = ""))),
                                                  
@@ -60,18 +60,18 @@ ui <- fluidPage(theme = shinythemes::shinytheme("flatly"),
                                                  if the analysis considered their complements instead.")))
                                         ),
                                         tabPanel(h4("Data"), 
-                                                 p("Suppose that there are", strong("S sites"), " and ",strong("M water samples"), "collected from each site, with each sample resulting
+                                                 p("Suppose that there are", strong("S sites"), " and ",strong("M samples"), "collected from each site, with each sample resulting
 in ", strong("K PCR replicates.")),
                                                  
                                                  p("The data need to be formatted in the following way and saved in a CSV file ", strong("before")," uploading them onto the app:"),
                                                  
-                                                 p(" -	Create one row for each site and one column for each water sample, with each resulting cell denoting the ",strong("number of positive PCR replicates") ," obtained in each case."),
+                                                 p(" -	Create one row for each site and one column for each sample, with each resulting cell denoting the ",strong("number of positive PCR replicates") ," obtained in each case."),
                                                  
-                                                 p(" -	If data on  ",strong("confirmed species presence")," exist, then this information should be included in the column adjacent to the data corresponding to the Mth water sample from all sites, with a 1 indicating confirmed species presence and 0 otherwise for each site."),
+                                                 p(" -	If data on  ",strong("confirmed species presence")," exist, then this information should be included in the column adjacent to the data corresponding to the Mth sample from all sites, with a 1 indicating confirmed species presence and 0 otherwise for each site."),
                                                  
-                                                 p(" -	Any available ",strong("covariates")," should be included in the columns to the right of the confirmed presences (or Mth water sample, as appropriate)."),
+                                                 p(" -	Any available ",strong("covariates")," should be included in the columns to the right of the confirmed presences (or Mth sample, as appropriate)."),
                                                  
-                                                 p("We suggest", strong("standardising all continuous covariates"), "before uploading the file (subtracting the mean and dividing by the standard deviation of the corresponging column)."),
+                                                 p("We suggest", strong("standardising all continuous covariates"), "before uploading the file (subtracting the mean and dividing by the standard deviation of the corresponding column)."),
                                                  
                                                  p("Please note that rows with", strong("missing values"), "in the covariates or the eDNA scores should be removed."),
                                                  
@@ -102,7 +102,7 @@ columns in the ",strong("EDNA scores")," box correct (M), is the number of colum
                                                  
                                                  p("Specify the number of iterations that should be discarded (burn-in) and the subsequent number of iterations that should be run. Note that we recommend the default values or more, but not less."),
                                                  
-                                                 p("Here you can specify the posterior means for all model parameters (please refer to the Griffin et al. (2019) paper for more details). These are set to the default values and we advise against making changes unless you are confident you know what you are doing!"),
+                                                 p("Here you can specify the posterior means for all model parameters (please refer to the Griffin et al. (2020) paper for more details). These are set to the default values and we advise against making changes unless you are confident you know what you are doing!"),
                                                  
                                                  p("Once you are happy that everything is set-up as it should, click on ",strong("Run"),".
                                      A box will appear in the bottom-right corner showing you the iteration number of the algorithm and a message will appear once the results are ready, at which stage you can click on ",strong("Results."))
@@ -270,7 +270,7 @@ columns in the ",strong("EDNA scores")," box correct (M), is the number of colum
                                                       )),
                                                       fluidRow(
                                                         tags$h4("Prior distributions"),
-                                                        tags$h5("Below we list the means of the prior distributions for all probabilities as specified in the Griffin et al. (2019) paper. 
+                                                        tags$h5("Below we list the means of the prior distributions for all probabilities as specified in the Griffin et al. (2020) paper. 
                                             Please note that you are advised against making substantial changes to these settings unless you fully understand the modelling 
                                                        approach or have consulted with a statistician."),
                                                         column(width = 4,
