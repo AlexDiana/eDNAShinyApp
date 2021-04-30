@@ -791,3 +791,93 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   }
 }
 
+
+createDiagnosticsPlot <- function(beta_output, niter, nchain,
+                                  nameVariable, usingC ){
+  
+  beta_intercept <- matrix(beta_output[,,1], nrow = nchain, ncol = niter)
+  beta_intercept_long <- reshape2::melt(beta_intercept)
+  
+  beta0_diagnostics <- ggplot2::ggplot(data = beta_intercept_long, ggplot2::aes(x = Var2, 
+                                                              y = value,
+                                                              color = Var1,
+                                                              group = Var1)) + ggplot2::geom_line() + 
+    ggplot2::ggtitle("Intercept") +
+    ggplot2::theme_bw() + ggplot2::scale_y_continuous(name = "") +
+    ggplot2::xlab("Iterations") +
+    ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5, size = 20),
+          legend.position = "none",
+          axis.title = ggplot2::element_text(size = 20, face = "bold"),
+          axis.text = ggplot2::element_text(size = 13, face = "bold", angle = 90),
+          # panel.grid.major = element_line(colour="grey", size=0.015),
+          panel.background = ggplot2::element_rect(fill = "white", color = "black"))
+  
+  beta_output_long <- reshape2::melt(beta_output[1,,-1])
+  if(usingC){
+    beta_diagnostics <- ggplot2::ggplot(beta_output_long, 
+                                       ggplot2::aes(x = Var1, y = value, 
+                                   colour = Var2)) + ggplot2::geom_line() +
+      ggplot2::ggtitle("Covariate coefficients") +
+      ggplot2::theme_bw() + ggplot2::scale_y_continuous(name = "") +
+      ggplot2::xlab("Iterations") +
+      ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5, size = 20),
+            # legend.position = "none",
+            axis.title = ggplot2::element_text(size = 20, face = "bold"),
+            axis.text = ggplot2::element_text(size = 13, face = "bold", angle = 90),
+            # panel.grid.major = element_line(colour="grey", size=0.015),
+            panel.background = ggplot2::element_rect(fill = "white", color = "black"))
+  } else {
+    beta_diagnostics <- NULL
+  }
+  
+  list("beta0_diagnostics" = beta0_diagnostics,
+       "beta_diagnostics" = beta_diagnostics)
+}
+
+createDiagnosticsTable <- function(beta_output, niter, nchain, usingC){
+  
+  beta_output2 <- matrix(NA, nrow = niter * nchain, ncol = dim(beta_output)[3])
+  for (chain in 1:nchain) {
+    beta_output2[(chain - 1)*niter + 1:niter,] <- beta_output[chain,,]
+  }
+  
+  ESS_beta0 <- coda::effectiveSize(beta_output2[,1])
+  if(usingC){
+    
+    gewekeDiagnostics <- apply(beta_output2, 2, function(x){
+      coda::geweke.diag(x)$z
+    })
+    
+    gewekePvalue <- apply(beta_output2, 2, function(x){
+      2* (1 - pnorm(abs(coda::geweke.diag(x)$z)))
+    })
+    
+    ESS_beta <- coda::effectiveSize(beta_output2[,-1])
+    diagnostics_table <- data.frame("Variable" = c("Intercept",names(ESS_beta)),
+                                    "ESS" = c(ESS_beta0, ESS_beta),
+                                    "Recommended ESS" = 250,
+                                    "Geweke Diagnostics" = gewekeDiagnostics,
+                                    "Geweke P-value" = gewekePvalue)
+    
+  } else {
+    
+    gewekeDiagnostics <- apply(beta_output2[,1,drop = F], 2, function(x){
+      coda::geweke.diag(x)$z
+    })
+    
+    gewekePvalue <- apply(beta_output2[,1,drop = F], 2, function(x){
+      2* (1 - pnorm(abs(coda::geweke.diag(x)$z)))
+    })
+    
+    diagnostics_table <- data.frame("Variable" = c("Intercept"),
+                                    "ESS" = c(ESS_beta0),
+                                    "Recommended ESS" = 250,
+                                    "Geweke Diagnostics" = gewekeDiagnostics,
+                                    "Geweke P-value" = gewekePvalue)
+  } 
+  
+  
+  rownames(diagnostics_table) <- NULL
+  
+  diagnostics_table
+}

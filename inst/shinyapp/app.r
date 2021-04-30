@@ -135,7 +135,11 @@ columns in the ",strong("EDNA scores")," box correct (M), is the number of colum
                                          are slower in convergence."),
                                                  
                                                  p("As convergence for the coefficients is slower to reach because of the variable selection step, we suggest to check for convergence
-                                         only for the intercepts.")
+                                         only for the intercepts."),
+                                                 
+                                                 p("We provide as convergence diagnostics the Geweke diagnostics. This statistics produces a Z-value similar to the quantity used
+                                         for comparing means. To help the user, we compute the p-value using this Z-value and we report the p-values as well. We note that
+                                         convergence issues arise if the p-value is too low (< 0.05)")
                                         ),
                                         tabPanel(h4("Code for additional results"), 
                                                  
@@ -163,7 +167,15 @@ columns in the ",strong("EDNA scores")," box correct (M), is the number of colum
                                                  
                                                  p(em("sites_subset <- c(1,10,40,60)")),
                                                  
-                                                 p(em("createProbabilitiesPlots(data, sites_subset)"))
+                                                 p(em("createProbabilitiesPlots(data, sites_subset)")),
+                                                 
+                                                 p(em("_______")),
+                                                 
+                                                 p("To generate f statistics for each covariate, which represents the proportion of times the covariate had the same sign as the mean value, the commands are:"),
+                                                 
+                                                 p(em("beta_psi_all <- read.csv(file = 'download_beta_psi_all.csv')")),
+                                                 
+                                                 p(em("apply(beta_psi_all, 2, function(x){mean(sign(x) == sign(mean(x)))})"))
                                                  
                                                  
                                         )
@@ -1025,7 +1037,7 @@ server <- function(input, output) {
         qx <- array(NA, dim = c(nchain , niter, K + 1))
       }
       
-      shinyalert::shinyalert("MCMC started successfully", "Keep track of the progresses in the box in the bottom-right corner", type = "success")
+      shinyalert::shinyalert("MCMC started successfully", "Keep track of the progress in the box in the bottom-right corner", type = "success")
       
       withProgress(message = 'Running', value = 0, min = 0, max = 1, {
         
@@ -1751,208 +1763,62 @@ server <- function(input, output) {
                                        "download_beta_p11" = download_beta_p11,
                                        "download_p10" = download_p10,
                                        "download_beta_p10" = download_beta_p10,
-                                       "condProbTable" = condProbTable)
+                                       "condProbTable" = condProbTable,
+                                       "download_psi_all" = beta_psi_output2,
+                                       "download_theta11_all" = beta_theta11_output2,
+                                       "download_theta10_all" = beta_theta10_output2,
+                                       "download_p11_all" = beta_p11_output2,
+                                       "download_p10_all" = beta_p10_output2)
 
-      # plots diagnostics
-      {
-        # beta0_psi_GW_diagn <- computeGewekeDiagnostics(beta_psi_output[1,,1])
-        
-        beta0_psi_diagnostics_plot <- ggplot2::qplot(1:niter, beta_psi_output[1,,1], geom = "line") + 
-          ggplot2::ggtitle("Intercept of psi") +
-          ggplot2::theme_bw() + ggplot2::scale_y_continuous(name = "") +
-          ggplot2::xlab("Iterations") 
-        # ggtitle(paste0("Intercept of psi - Geweke Diagnostics = ", round(beta0_psi_GW_diagn,4))) 
-        beta_psi_output_long <- reshape2::melt(beta_psi_output[1,,-1])
-        if(usingCov[1]){
-          beta_psi_diagnostics_plot <- ggplot2::ggplot(beta_psi_output_long, ggplot2::aes(x = Var1, y = value, colour = Var2)) + 
-            ggplot2::geom_line() +
-            ggplot2::ggtitle("Coefficients of psi") +
-            ggplot2::theme_bw() + ggplot2::scale_y_continuous(name = "") +
-            ggplot2::xlab("Iterations") 
-        } else {
-          beta_psi_diagnostics_plot <- NULL
-        }
-        
-        # beta0_theta11_GW_diagn <- computeGewekeDiagnostics(beta_theta11_output[1,,1])
-        
-        beta0_theta11_diagnostics_plot <- ggplot2::qplot(1:niter, beta_theta11_output[1,,1], geom = "line") + 
-          ggplot2::ggtitle("Intercept of theta11") +
-          ggplot2::theme_bw() + ggplot2::scale_y_continuous(name = "") +
-          ggplot2::xlab("Iterations") 
-        # ggtitle(paste0("Intercept of theta11 - Geweke Diagnostics = ", round(beta0_theta11_GW_diagn,4)))
-        beta_theta11_output_long <- reshape2::melt(beta_theta11_output[1,,-1])
-        if(usingCov[2]){
-          beta_theta11_diagnostics_plot <- ggplot2::ggplot(beta_theta11_output_long, ggplot2::aes(x = Var1, y = value, colour = Var2)) + 
-            ggplot2::geom_line() +
-            ggplot2::ggtitle("Coefficients of theta11")   +
-            ggplot2::theme_bw() + ggplot2::scale_y_continuous(name = "") +
-            ggplot2::xlab("Iterations") 
-        } else {
-          beta_theta11_diagnostics_plot <- NULL
-        }
-        
-        # beta0_theta10_GW_diagn <- computeGewekeDiagnostics(beta_theta10_output[1,,1])
-        
-        beta0_theta10_diagnostics_plot <- ggplot2::qplot(1:niter, beta_theta10_output[1,,1], geom = "line") + 
-          ggplot2::ggtitle("Intercept of theta10") +
-          ggplot2::theme_bw() + ggplot2::scale_y_continuous(name = "") +
-          ggplot2::xlab("Iterations")  
-        # ggtitle(paste0("Intercept of theta10 - Geweke Diagnostics = ", round(beta0_theta10_GW_diagn,4)))
-        beta_theta10_output_long <- reshape2::melt(beta_theta10_output[1,,-1])
-        if(usingCov[3]){
-          beta_theta10_diagnostics_plot <- ggplot2::ggplot(beta_theta10_output_long, ggplot2::aes(x = Var1, y = value, colour = Var2)) + 
-            ggplot2::geom_line() +
-            ggplot2::ggtitle("Coefficients of theta10")   +
-            ggplot2::theme_bw() + ggplot2::scale_y_continuous(name = "") +
-            ggplot2::xlab("Iterations") 
-        } else {
-          beta_theta10_diagnostics_plot <- NULL
-        }
-        
-        # beta0_p11_GW_diagn <- computeGewekeDiagnostics(beta_p11_output[1,,1])
-        
-        beta0_p11_diagnostics_plot <- ggplot2::qplot(1:niter, beta_p11_output[1,,1], geom = "line") + 
-          ggplot2::ggtitle("Intercept of p11") +
-          ggplot2::theme_bw() + ggplot2::scale_y_continuous(name = "") +
-          ggplot2::xlab("Iterations") 
-        # ggtitle(paste0("Intercept of p11 - Geweke Diagnostics = ", round(beta0_p11_GW_diagn,4)))
-        beta_p11_output_long <- reshape2::melt(beta_p11_output[1,,-1])
-        if(usingCov[4]){
-          beta_p11_diagnostics_plot <- ggplot2::ggplot(beta_p11_output_long, ggplot2::aes(x = Var1, y = value, colour = Var2)) + 
-            ggplot2::geom_line() +
-            ggplot2::ggtitle("Coefficients of p11")  +
-            ggplot2::theme_bw() + ggplot2::scale_y_continuous(name = "") +
-            ggplot2::xlab("Iterations")  
-        } else  {
-          beta_p11_diagnostics_plot <- NULL
-        }
-        
-        # beta0_p10_GW_diagn <- computeGewekeDiagnostics(beta_p10_output[1,,1])
-        
-        beta0_p10_diagnostics_plot <- ggplot2::qplot(1:niter, beta_p10_output[1,,1], geom = "line") + 
-          ggplot2::ggtitle("Intercept of p10") +
-          ggplot2::theme_bw() + ggplot2::scale_y_continuous(name = "") +
-          ggplot2::xlab("Iterations") 
-        # ggtitle(paste0("Intercept of p10 - Geweke Diagnostics = ", round(beta0_p10_GW_diagn,4)))
-        beta_p10_output_long <- reshape2::melt(beta_p10_output[1,,-1])
-        if(usingCov[5]){
-          beta_p10_diagnostics_plot <- ggplot2::ggplot(beta_p10_output_long, ggplot2::aes(x = Var1, y = value, colour = Var2)) + 
-            ggplot2::geom_line() +
-            ggplot2::ggtitle("Coefficients of p10")   +
-            ggplot2::theme_bw() + ggplot2::scale_y_continuous(name = "") +
-            ggplot2::xlab("Iterations") 
-        } else {
-          beta_p10_diagnostics_plot <- NULL
-        }
-        
-      }
+      list_psi_diagnostics <- createDiagnosticsPlot(beta_psi_output, niter, nchain,
+                                                    "\u03C8", usingCov[1])
+      beta0_psi_diagnostics_plot <- list_psi_diagnostics$beta0_diagnostics
+      beta_psi_diagnostics_plot <- list_psi_diagnostics$beta_diagnostics
       
-      # create diagnostics table
+      list_theta11_diagnostics <- createDiagnosticsPlot(beta_theta11_output, niter, nchain,
+                                                        expression(theta[1][1]), usingCov[2])
+      beta0_theta11_diagnostics_plot <- list_theta11_diagnostics$beta0_diagnostics
+      beta_theta11_diagnostics_plot <- list_theta11_diagnostics$beta_diagnostics
+      
+      list_theta10_diagnostics <- createDiagnosticsPlot(beta_theta10_output, niter, nchain,
+                                                        expression(theta[1][0]), usingCov[3])
+      beta0_theta10_diagnostics_plot <- list_theta10_diagnostics$beta0_diagnostics
+      beta_theta10_diagnostics_plot <- list_theta10_diagnostics$beta_diagnostics
+      
+      list_p11_diagnostics <- createDiagnosticsPlot(beta_p11_output, niter, nchain,
+                                                    expression(p[11]), usingCov[4])
+      beta0_p11_diagnostics_plot <- list_p11_diagnostics$beta0_diagnostics
+      beta_p11_diagnostics_plot <- list_p11_diagnostics$beta_diagnostics
+      
+      list_p10_diagnostics <- createDiagnosticsPlot(beta_p10_output, niter, nchain,
+                                                    expression(p[10]), usingCov[5])
+      beta0_p10_diagnostics_plot <- list_p10_diagnostics$beta0_diagnostics
+      beta_p10_diagnostics_plot <- list_p10_diagnostics$beta_diagnostics
+      
+      # tables
       {
+        diagnostics_table_psi <- createDiagnosticsTable(beta_psi_output, niter, nchain, usingCov[1])
+        diagnostics_table_theta11 <- createDiagnosticsTable(beta_theta11_output, niter, nchain, usingCov[2])
+        diagnostics_table_theta10 <- createDiagnosticsTable(beta_theta10_output, niter, nchain, usingCov[3])
+        diagnostics_table_p11 <- createDiagnosticsTable(beta_p11_output, niter, nchain, usingCov[4])
+        diagnostics_table_p10 <- createDiagnosticsTable(beta_p10_output, niter, nchain, usingCov[5])
         
-        # psi
-        {
-          ESS_beta0psi <- coda::effectiveSize(beta_psi_output[1,,1])
-          if(usingCov[1]){
-            ESS_betapsi <- coda::effectiveSize(beta_psi_output[1,,-1])
-            diagnostics_table_psi <- data.frame("Variable" = c("Intercept",names(ESS_betapsi)),
-                                                "ESS" = c(ESS_beta0psi, ESS_betapsi),
-                                                "Recommended ESS" = 250)
-            
-          } else {
-            diagnostics_table_psi <- data.frame("Variable" = c("Intercept"),
-                                                "ESS" = c(ESS_beta0psi),
-                                                "Recommended ESS" = 250)
-          } 
-          
-          
-          rownames(diagnostics_table_psi) <- NULL
-        }
-        
-        # theta11
-        {
-          ESS_beta0theta11 <- coda::effectiveSize(beta_theta11_output[1,,1])
-          if(usingCov[2]){
-            ESS_betatheta11 <- coda::effectiveSize(beta_theta11_output[1,,-1])
-            
-            diagnostics_table_theta11 <- data.frame("Variable" = c("Intercept",names(ESS_betatheta11)),
-                                                    "ESS" = c(ESS_beta0theta11, ESS_betatheta11),
-                                                    "Recommended ESS" = 250)
-          } else {
-            diagnostics_table_theta11 <- data.frame("Variable" = c("Intercept"),
-                                                    "ESS" = c(ESS_beta0theta11),
-                                                    "Recommended ESS" = 250)
-          }
-          
-          rownames(diagnostics_table_theta11) <- NULL
-        }
-        
-        # theta10
-        {
-          ESS_beta0theta10 <- coda::effectiveSize(beta_theta10_output[1,,1])
-          if(usingCov[3]){
-            ESS_betatheta10 <- coda::effectiveSize(beta_theta10_output[1,,-1])
-            
-            diagnostics_table_theta10 <- data.frame("Variable" = c("Intercept",names(ESS_betatheta10)),
-                                                    "ESS" = c(ESS_beta0theta10, ESS_betatheta10),
-                                                    "Recommended ESS" = 250)
-            
-          } else {
-            diagnostics_table_theta10 <- data.frame("Variable" = c("Intercept"),
-                                                    "ESS" = c(ESS_beta0theta10),
-                                                    "Recommended ESS" = 250)
-            
-          }
-          
-          rownames(diagnostics_table_theta10) <- NULL
-        }
-        
-        # p11
-        {
-          ESS_beta0p11 <- coda::effectiveSize(beta_p11_output[1,,1])
-          if(usingCov[4]){
-            ESS_betap11 <- coda::effectiveSize(beta_p11_output[1,,-1])
-            
-            diagnostics_table_p11 <- data.frame("Variable" = c("Intercept",names(ESS_betap11)),
-                                                "ESS" = c(ESS_beta0p11, ESS_betap11),
-                                                "Recommended ESS" = 250)  
-          } else {
-            diagnostics_table_p11 <- data.frame("Variable" = c("Intercept"),
-                                                "ESS" = c(ESS_beta0p11),
-                                                "Recommended ESS" = 250)  
-          }
-          
-          
-          rownames(diagnostics_table_p11) <- NULL
-        }
-        
-        # p10
-        {
-          ESS_beta0p10 <- coda::effectiveSize(beta_p10_output[1,,1])
-          if(usingCov[5]){
-            ESS_betap10 <- coda::effectiveSize(beta_p10_output[1,,-1])
-            
-            diagnostics_table_p10 <- data.frame("Variable" = c("Intercept",names(ESS_betap10)),
-                                                "ESS" = c(ESS_beta0p10, ESS_betap10),
-                                                "Recommended ESS" = 250)
-            
-          } else {
-            diagnostics_table_p10 <- data.frame("Variable" = c("Intercept"),
-                                                "ESS" = c(ESS_beta0p10),
-                                                "Recommended ESS" = 250)
-          }
-          
-          rownames(diagnostics_table_p10) <- NULL
-        }
-        
-        convergenceReached <- (ESS_beta0psi > 250) & (ESS_beta0theta11 > 250) & (ESS_beta0theta10 > 250) & 
-          (ESS_beta0p11 > 250) & (ESS_beta0p10 > 250) 
+        convergenceReached <- (diagnostics_table_psi[1,2] > 250) & 
+          (diagnostics_table_theta11[1,2] > 250) &
+          (diagnostics_table_theta10[1,2] > 250) &
+          (diagnostics_table_p11[1,2] > 250) &
+          (diagnostics_table_p10[1,2] > 250) &
+          (diagnostics_table_psi[1,5] > 250) & 
+          (diagnostics_table_theta11[1,5] > 250) &
+          (diagnostics_table_theta10[1,5] > 250) &
+          (diagnostics_table_p11[1,5] > 250) &
+          (diagnostics_table_p10[1,5] > 250)
       }
       
       if(convergenceReached){
         shinyalert::shinyalert("Fitting complete", "", type = "success")  
       } else {
-        shinyalert::shinyalert("Convergence not reached", "We suggest running again the model with more iterations", type = "warning")
+        shinyalert::shinyalert("Convergence issues", "We suggest running again the model with more iterations", type = "warning")
       }
       
       
@@ -3171,12 +3037,20 @@ server <- function(input, output) {
           download_beta_p11 <- list_results$download_beta_p11
           download_p10 <- list_results$download_p10
           download_beta_p10 <- list_results$download_beta_p10
+          download_psi_all <- list_results$download_psi_all
+          download_theta11_all <- list_results$download_theta11_all
+          download_theta10_all <- list_results$download_theta10_all
+          download_p11_all <- list_results$download_p11_all
+          download_p10_all <- list_results$download_p10_all
           
           fs <- c("download_psi.csv", "download_beta_psi.csv",
                   "download_theta11.csv", "download_beta_theta11.csv",
                   "download_theta10.csv", "download_beta_theta10.csv",
                   "download_p11.csv", "download_beta_p11.csv",
                   "download_p10.csv", "download_beta_p10.csv",
+                  "download_beta_psi_all.csv", "download_beta_theta11_all.csv",
+                  "download_beta_theta10_all.csv", "download_beta_p11_all.csv",
+                  "download_beta_p10_all.csv",
                   row.names = F)
           write.csv(download_psi, file = "download_psi.csv", sep =",", row.names = F)
           # write.csv(download_z, file = "download_z.csv", sep =",", row.names = F)
@@ -3189,6 +3063,11 @@ server <- function(input, output) {
           write.csv(download_beta_p11, file = "download_beta_p11.csv", sep =",")
           write.csv(download_p10, file = "download_p10.csv", sep =",", row.names = F)
           write.csv(download_beta_p10, file = "download_beta_p10.csv", sep =",")
+          write.csv(download_psi_all, file = "download_beta_psi_all.csv", sep =",", row.names = F)
+          write.csv(download_theta11_all, file = "download_beta_theta11_all.csv", sep =",", row.names = F)
+          write.csv(download_theta10_all, file = "download_beta_theta10_all.csv", sep =",", row.names = F)
+          write.csv(download_p11_all, file = "download_beta_p11_all.csv", sep =",", row.names = F)
+          write.csv(download_p10_all, file = "download_beta_p10_all.csv", sep =",", row.names = F)
           print (fs)
           
           zip(zipfile=fname, files=fs)
