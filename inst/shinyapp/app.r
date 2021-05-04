@@ -137,9 +137,7 @@ columns in the ",strong("EDNA scores")," box correct (M), is the number of colum
                                                  p("As convergence for the coefficients is slower to reach because of the variable selection step, we suggest to check for convergence
                                          only for the intercepts."),
                                                  
-                                                 p("We provide as convergence diagnostics the Geweke diagnostics. This statistics produces a Z-value similar to the quantity used
-                                         for comparing means. To help the user, we compute the p-value using this Z-value and we report the p-values as well. We note that
-                                         convergence issues arise if the p-value is too low (< 0.05)")
+                                                 p("For each coefficient, we report the effective sample size (ESS) and the Geweke diagnostic, implemented in package coda. We recommend ESS that is at least equal to 250 for the intercepts. If this condition is not met, then a message will pop up suggesting to increase the number of iterations and rerun the analysis. Similarly, if the p-value of the Geweke diagnostic is low (<0.05) the same message will appear and more iterations are needed to reach convergence.")
                                         ),
                                         tabPanel(h4("Code for additional results"), 
                                                  
@@ -171,7 +169,7 @@ columns in the ",strong("EDNA scores")," box correct (M), is the number of colum
                                                  
                                                  p(em("_______")),
                                                  
-                                                 p("To generate f statistics for each covariate, which represents the proportion of times the covariate had the same sign as the mean value, the commands are:"),
+                                                 p("To generate for each coefficient the f statistics, which represents the proportion of times the coefficient had the same sign as the mean value, the commands are:"),
                                                  
                                                  p(em("beta_psi_all <- read.csv(file = 'download_beta_psi_all.csv')")),
                                                  
@@ -261,10 +259,10 @@ columns in the ",strong("EDNA scores")," box correct (M), is the number of colum
                                                                    label = tags$h4("Run")),
                                                       tags$h2("Advanced settings"),
                                                       tags$br(),
-                                                      numericInput("num_burnin", "Number of burn-in iterations", 3000, min = 0, max = 10000),
-                                                      numericInput("num_iter", "Number of iterations", 3000, min = 0, max = 10000),
+                                                      numericInput("num_burnin", "Number of burn-in iterations", 2000, min = 0, max = 10000),
+                                                      numericInput("num_iter", "Number of iterations", 2000, min = 0, max = 10000),
                                                       numericInput("num_chain", "Number of chains", 1, min = 0, max = 10000),
-                                                      numericInput("num_thin", "Number of thinned iterations", 1, min = 1, max = 10000)),
+                                                      numericInput("num_thin", "Number of thinned iterations", 20, min = 1, max = 10000)),
                                                column(width = 8,
                                                       tags$h4("Select which probabilities are to be considered as a function of covariates."),
                                                       fluidRow(column(width = 3,
@@ -1808,11 +1806,11 @@ server <- function(input, output) {
           (diagnostics_table_theta10[1,2] > 250) &
           (diagnostics_table_p11[1,2] > 250) &
           (diagnostics_table_p10[1,2] > 250) &
-          (diagnostics_table_psi[1,5] > 250) & 
-          (diagnostics_table_theta11[1,5] > 250) &
-          (diagnostics_table_theta10[1,5] > 250) &
-          (diagnostics_table_p11[1,5] > 250) &
-          (diagnostics_table_p10[1,5] > 250)
+          (diagnostics_table_psi[1,5] > .05) & 
+          (diagnostics_table_theta11[1,5] > .05) &
+          (diagnostics_table_theta10[1,5] > .05) &
+          (diagnostics_table_p11[1,5] > .05) &
+          (diagnostics_table_p10[1,5] > .05)
       }
       
       if(convergenceReached){

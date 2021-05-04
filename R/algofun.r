@@ -841,32 +841,34 @@ createDiagnosticsTable <- function(beta_output, niter, nchain, usingC){
     beta_output2[(chain - 1)*niter + 1:niter,] <- beta_output[chain,,]
   }
   
-  ESS_beta0 <- coda::effectiveSize(beta_output2[,1])
+  ESS_beta0 <- round(coda::effectiveSize(beta_output2[,1]))
   if(usingC){
     
     gewekeDiagnostics <- apply(beta_output2, 2, function(x){
-      coda::geweke.diag(x)$z
+      coda::geweke.diag(x, frac1 = .5, frac2 = .5)$z
     })
     
     gewekePvalue <- apply(beta_output2, 2, function(x){
-      2* (1 - pnorm(abs(coda::geweke.diag(x)$z)))
+      2* (1 - pnorm(abs(coda::geweke.diag(x, frac1 = .5, frac2 = .5)$z)))
     })
     
-    ESS_beta <- coda::effectiveSize(beta_output2[,-1])
+    ESS_beta <- round(coda::effectiveSize(beta_output2[,-1]))
     diagnostics_table <- data.frame("Variable" = c("Intercept",names(ESS_beta)),
                                     "ESS" = c(ESS_beta0, ESS_beta),
                                     "Recommended ESS" = 250,
                                     "Geweke Diagnostics" = gewekeDiagnostics,
                                     "Geweke P-value" = gewekePvalue)
+    diagnostics_table$Recommended.ESS <- as.integer(diagnostics_table$Recommended.ESS)
+    diagnostics_table$ESS <- as.integer(diagnostics_table$ESS)
     
   } else {
     
     gewekeDiagnostics <- apply(beta_output2[,1,drop = F], 2, function(x){
-      coda::geweke.diag(x)$z
+      coda::geweke.diag(x, frac1 = .5, frac2 = .5)$z
     })
     
     gewekePvalue <- apply(beta_output2[,1,drop = F], 2, function(x){
-      2* (1 - pnorm(abs(coda::geweke.diag(x)$z)))
+      2* (1 - pnorm(abs(coda::geweke.diag(x, frac1 = .5, frac2 = .5)$z)))
     })
     
     diagnostics_table <- data.frame("Variable" = c("Intercept"),
@@ -874,6 +876,8 @@ createDiagnosticsTable <- function(beta_output, niter, nchain, usingC){
                                     "Recommended ESS" = 250,
                                     "Geweke Diagnostics" = gewekeDiagnostics,
                                     "Geweke P-value" = gewekePvalue)
+    diagnostics_table$Recommended.ESS <- as.integer(diagnostics_table$Recommended.ESS)
+    diagnostics_table$ESS <- as.integer(diagnostics_table$ESS)
   } 
   
   
