@@ -811,7 +811,7 @@ server <- function(input, output) {
         b_pi <- 1
         
         d_bar <- input$d_bar_prior        
-        d_bar <- ifelse(d_bar <= ncov, d_bar, 2)
+        d_bar <- ifelse(d_bar <= ncov, d_bar, 1)
         
         epsilon <- pnorm(1)
         

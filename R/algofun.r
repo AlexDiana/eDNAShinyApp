@@ -812,7 +812,7 @@ createDiagnosticsPlot <- function(beta_output, niter, nchain,
           # panel.grid.major = element_line(colour="grey", size=0.015),
           panel.background = ggplot2::element_rect(fill = "white", color = "black"))
   
-  beta_output_long <- reshape2::melt(beta_output[1,,-1])
+  beta_output_long <- reshape2::melt(beta_output[1,,][,-1,drop=F])
   if(usingC){
     beta_diagnostics <- ggplot2::ggplot(beta_output_long, 
                                        ggplot2::aes(x = Var1, y = value, 
