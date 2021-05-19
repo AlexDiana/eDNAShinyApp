@@ -1887,7 +1887,7 @@ server <- function(input, output) {
           
           psi_plot <- list_results$psi_plot
           
-          ggsave(file, plot = psi_plot, device = "png")
+          ggplot2::ggsave(file, plot = psi_plot, device = "png")
         }
       )
       
@@ -1898,7 +1898,7 @@ server <- function(input, output) {
           
           beta0_psi_plot <- list_results$beta0_psi_plot
           
-          ggsave(file, plot = beta0_psi_plot, device = "png")
+          ggplot2::ggsave(file, plot = beta0_psi_plot, device = "png")
         }
       )
       
@@ -1909,7 +1909,7 @@ server <- function(input, output) {
           
           beta_psi_plot <- list_results$beta_psi_plot
           
-          ggsave(file, plot = beta_psi_plot, device = "png")
+          ggplot2::ggsave(file, plot = beta_psi_plot, device = "png")
         }
       )
       
@@ -1920,7 +1920,7 @@ server <- function(input, output) {
           
           gamma_psi_plot <- list_results$gamma_psi_plot
           
-          ggsave(file, plot = gamma_psi_plot, device = "png")
+          ggplot2::ggsave(file, plot = gamma_psi_plot, device = "png")
         }
       )
       
@@ -1974,7 +1974,7 @@ server <- function(input, output) {
           
           theta11_plot <- list_results$theta11_plot
           
-          ggsave(file, plot = theta11_plot, device = "png")
+          ggplot2::ggsave(file, plot = theta11_plot, device = "png")
         }
       )
       
@@ -1985,7 +1985,7 @@ server <- function(input, output) {
           
           beta0_theta11_plot <- list_results$beta0_theta11_plot
           
-          ggsave(file, plot = beta0_theta11_plot, device = "png")
+          ggplot2::ggsave(file, plot = beta0_theta11_plot, device = "png")
         }
       )
       
@@ -1996,7 +1996,7 @@ server <- function(input, output) {
           
           beta_theta11_plot <- list_results$beta_theta11_plot
           
-          ggsave(file, plot = beta_theta11_plot, device = "png")
+          ggplot2::ggsave(file, plot = beta_theta11_plot, device = "png")
         }
       )
       
@@ -2007,7 +2007,7 @@ server <- function(input, output) {
           
           gamma_theta11_plot <- list_results$gamma_theta11_plot
           
-          ggsave(file, plot = gamma_theta11_plot, device = "png")
+          ggplot2::ggsave(file, plot = gamma_theta11_plot, device = "png")
         }
       )
     }
@@ -2060,7 +2060,7 @@ server <- function(input, output) {
           
           theta10_plot <- list_results$theta10_plot
           
-          ggsave(file, plot = theta10_plot, device = "png")
+          ggplot2::ggsave(file, plot = theta10_plot, device = "png")
         }
       )
       
@@ -2071,7 +2071,7 @@ server <- function(input, output) {
           
           beta0_theta10_plot <- list_results$beta0_theta10_plot
           
-          ggsave(file, plot = beta0_theta10_plot, device = "png")
+          ggplot2::ggsave(file, plot = beta0_theta10_plot, device = "png")
         }
       )
       
@@ -2082,7 +2082,7 @@ server <- function(input, output) {
           
           beta_theta10_plot <- list_results$beta_theta10_plot
           
-          ggsave(file, plot = beta_theta10_plot, device = "png")
+          ggplot2::ggsave(file, plot = beta_theta10_plot, device = "png")
         }
       )
       
@@ -2093,7 +2093,7 @@ server <- function(input, output) {
           
           gamma_theta10_plot <- list_results$gamma_theta10_plot
           
-          ggsave(file, plot = gamma_theta10_plot, device = "png")
+          ggplot2::ggsave(file, plot = gamma_theta10_plot, device = "png")
         }
       )
     }
@@ -2146,7 +2146,7 @@ server <- function(input, output) {
           
           p11_plot <- list_results$p11_plot
           
-          ggsave(file, plot = p11_plot, device = "png")
+          ggplot2::ggsave(file, plot = p11_plot, device = "png")
         }
       )
       
@@ -2157,7 +2157,7 @@ server <- function(input, output) {
           
           beta0_p11_plot <- list_results$beta0_p11_plot
           
-          ggsave(file, plot = beta0_p11_plot, device = "png")
+          ggplot2::ggsave(file, plot = beta0_p11_plot, device = "png")
         }
       )
       
@@ -2168,7 +2168,7 @@ server <- function(input, output) {
           
           beta_p11_plot <- list_results$beta_p11_plot
           
-          ggsave(file, plot = beta_p11_plot, device = "png")
+          ggplot2::ggsave(file, plot = beta_p11_plot, device = "png")
         }
       )
       
@@ -2179,7 +2179,7 @@ server <- function(input, output) {
           
           gamma_p11_plot <- list_results$gamma_p11_plot
           
-          ggsave(file, plot = gamma_p11_plot, device = "png")
+          ggplot2::ggsave(file, plot = gamma_p11_plot, device = "png")
         }
       )
     }
@@ -2232,7 +2232,7 @@ server <- function(input, output) {
           
           p10_plot <- list_results$p10_plot
           
-          ggsave(file, plot = p10_plot, device = "png")
+          ggplot2::ggsave(file, plot = p10_plot, device = "png")
         }
       )
       
@@ -2243,7 +2243,7 @@ server <- function(input, output) {
           
           beta0_p10_plot <- list_results$beta0_p10_plot
           
-          ggsave(file, plot = beta0_p10_plot, device = "png")
+          ggplot2::ggsave(file, plot = beta0_p10_plot, device = "png")
         }
       )
       
@@ -2254,7 +2254,7 @@ server <- function(input, output) {
           
           beta_p10_plot <- list_results$beta_p10_plot
           
-          ggsave(file, plot = beta_p10_plot, device = "png")
+          ggplot2::ggsave(file, plot = beta_p10_plot, device = "png")
         }
       )
       
@@ -2265,7 +2265,7 @@ server <- function(input, output) {
           
           gamma_p10_plot <- list_results$gamma_p10_plot
           
-          ggsave(file, plot = gamma_p10_plot, device = "png")
+          ggplot2::ggsave(file, plot = gamma_p10_plot, device = "png")
         }
       )
     }
